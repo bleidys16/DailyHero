@@ -24,6 +24,9 @@ dependencies:
   google_fonts: ^6.1.0
   flutter_animate: ^4.2.0
 
+  # Motor de juego (avatar pixel art)
+  flame: ^1.18.0
+
   # Utilidades
   intl: ^0.19.0
   uuid: ^4.0.0
@@ -44,3 +47,8 @@ flutter:
     - assets/images/
     - assets/sprites/
     - assets/icons/
+
+  fonts:
+    - family: PixelFont
+      fonts:
+        - asset: assets/fonts/pixel_font.ttf

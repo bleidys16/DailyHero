@@ -3,6 +3,12 @@ import '../models/inventory.dart';
 import '../services/supabase_service.dart';
 import 'user_provider.dart';
 
+// Catálogo completo de la tienda
+final allItemsProvider = FutureProvider<List<Item>>((ref) async {
+  final supabase = ref.watch(supabaseServiceProvider);
+  return await supabase.getAllItems();
+});
+
 // Obtener inventario del usuario
 final inventoryProvider = FutureProvider<List<InventoryItem>>((ref) async {
   final user = ref.watch(userNotifierProvider);

@@ -75,10 +75,10 @@ class HabitNotifier extends StateNotifier<void> {
 
     try {
       final supabase = ref.read(supabaseServiceProvider);
+      // El servicio ya suma XP y oro internamente; aquí solo refrescamos
+      // el estado del usuario para no duplicar la recompensa.
       await supabase.completeHabit(habit.id, user.id, habit.xpValue);
-
-      // Añadir XP al usuario
-      await ref.read(userNotifierProvider.notifier).addXp(habit.xpValue);
+      await ref.read(userNotifierProvider.notifier).refresh();
 
       // Refrescar listas
       ref.refresh(habitListProvider);

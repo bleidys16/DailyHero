@@ -288,6 +288,18 @@ class SupabaseService {
     }
   }
 
+  // ============ ITEMS / TIENDA ============
+
+  /// Obtener todos los items de la tienda
+  Future<List<Item>> getAllItems() async {
+    try {
+      final data = await _client.from('items').select().order('cost');
+      return List<Item>.from(data.map((i) => Item.fromJson(i)));
+    } catch (e) {
+      throw Exception('Error obteniendo items: $e');
+    }
+  }
+
   // ============ INVENTORY ============
 
   /// Obtener inventario del usuario

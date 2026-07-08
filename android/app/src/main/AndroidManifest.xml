@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Requerido para que Supabase funcione en builds release. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="dailyhero"
         android:name="${applicationName}"

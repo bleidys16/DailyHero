@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'config/theme.dart';
+import 'providers/user_provider.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/main_shell.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   try {
     await Supabase.initialize(
       url: 'https://tjlbaousyxyykftorjpy.supabase.co',
-      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqbGJhb3VzeXh5eWtmdG9yanB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxODQ1OTksImV4cCI6MjA5ODc2MDU5OX0.ODJRFUxYaZRiAAMGJzTFq6uwnBf8_EdP9qs4zeVb-Rc',
+      anonKey:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqbGJhb3VzeXh5eWtmdG9yanB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxODQ1OTksImV4cCI6MjA5ODc2MDU5OX0.ODJRFUxYaZRiAAMGJzTFq6uwnBf8_EdP9qs4zeVb-Rc',
     );
   } catch (e) {
-    // Si Supabase falla, la app igual se inicia
+    // Si Supabase falla, la app igual se inicia.
   }
 
   runApp(
@@ -28,40 +34,48 @@ class DailyHeroApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'DailyHero',
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF7C3AED),
-          brightness: Brightness.dark,
-        ),
-        scaffoldBackgroundColor: const Color(0xFF1E293B),
-      ),
-      home: const DashboardScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.dark,
+      home: const AuthGate(),
     );
   }
 }
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+/// Decide entre splash / login / dashboard según el estado de autenticación.
+class AuthGate extends ConsumerWidget {
+  const AuthGate({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userNotifierProvider);
+    if (user != null) return const MainShell();
+
+    // Sin usuario en memoria: consultamos la sesión persistida una vez.
+    final initial = ref.watch(currentUserProvider);
+    final waiting = initial.isLoading || initial.value != null;
+    if (waiting) return const _Splash();
+
+    return const LoginScreen();
+  }
+}
+
+class _Splash extends StatelessWidget {
+  const _Splash();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('DailyHero'),
-        centerTitle: true,
-      ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              'Bienvenido a DailyHero',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            Text('Tu dashboard irá aquí'),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.shield_moon, size: 72, color: AppColors.primary),
+            const SizedBox(height: 16),
+            Text('DailyHero',
+                style: AppTheme.pixel
+                    .copyWith(fontSize: 28, color: AppColors.textPrimary)),
+            const SizedBox(height: 24),
+            const CircularProgressIndicator(),
           ],
         ),
       ),

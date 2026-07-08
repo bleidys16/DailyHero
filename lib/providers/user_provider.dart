@@ -1,8 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user.dart';
+import '../services/mock_service.dart';
 import '../services/supabase_service.dart';
 
-final supabaseServiceProvider = Provider((ref) => SupabaseService());
+/// Cuando está activo, la app usa datos en memoria (sin backend).
+final demoModeProvider = StateProvider<bool>((ref) => false);
+
+final supabaseServiceProvider = Provider<SupabaseService>((ref) {
+  return ref.watch(demoModeProvider) ? MockService() : SupabaseService();
+});
 
 // Usuario actual autenticado
 final currentUserProvider = FutureProvider<User?>((ref) async {
@@ -71,6 +77,8 @@ class UserNotifier extends StateNotifier<User?> {
       final supabase = ref.read(supabaseServiceProvider);
       await supabase.logout();
       state = null;
+      // Limpia la sesión cacheada para que el AuthGate muestre el login.
+      ref.invalidate(currentUserProvider);
     } catch (e) {
       print('Error en logout: $e');
     }
