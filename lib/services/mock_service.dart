@@ -61,26 +61,34 @@ class MockService extends SupabaseService {
   ];
 
   // ---------- AUTH / USERS ----------
+  bool _loggedOut = false;
+
   @override
-  Future<User?> getCurrentUser() async => _user;
+  Future<User?> getCurrentUser() async => _loggedOut ? null : _user;
 
   @override
   Future<User?> getUser(String userId) async => _user;
 
   @override
-  Future<User?> login({required String email, required String password}) async =>
-      _user;
+  Future<User?> login({required String email, required String password}) async {
+    _loggedOut = false;
+    return _user;
+  }
 
   @override
   Future<User?> signUp({
     required String email,
     required String password,
     required String name,
-  }) async =>
-      _user;
+  }) async {
+    _loggedOut = false;
+    return _user;
+  }
 
   @override
-  Future<void> logout() async {}
+  Future<void> logout() async {
+    _loggedOut = true;
+  }
 
   @override
   Future<void> addXp(String userId, int xp) async {
@@ -144,16 +152,14 @@ class MockService extends SupabaseService {
 
   // ---------- TIENDA / INVENTARIO ----------
   final List<Item> _items = [
-    Item(id: 'i1', name: 'Espada de Hierro', type: ItemType.weapon, rarity: ItemRarity.common, cost: 150, icon: '⚔️', description: '+5 de ataque'),
-    Item(id: 'i2', name: 'Daga Veloz', type: ItemType.weapon, rarity: ItemRarity.uncommon, cost: 400, icon: '🗡️', description: 'Ataques rápidos'),
-    Item(id: 'i3', name: 'Espada Flamígera', type: ItemType.weapon, rarity: ItemRarity.rare, cost: 1200, icon: '🔥', description: 'Daño de fuego'),
-    Item(id: 'i4', name: 'Excalibur', type: ItemType.weapon, rarity: ItemRarity.legendary, cost: 3000, icon: '⚡', description: 'La espada legendaria'),
-    Item(id: 'i5', name: 'Escudo de Madera', type: ItemType.armor, rarity: ItemRarity.common, cost: 120, icon: '🛡️', description: '+3 de defensa'),
-    Item(id: 'i6', name: 'Armadura de Cuero', type: ItemType.armor, rarity: ItemRarity.uncommon, cost: 350, icon: '🥋', description: '+8 de defensa'),
-    Item(id: 'i7', name: 'Poción de Vida', type: ItemType.potion, rarity: ItemRarity.common, cost: 80, icon: '🧪', description: 'Restaura 50 HP'),
-    Item(id: 'i8', name: 'Elixir de XP', type: ItemType.potion, rarity: ItemRarity.rare, cost: 600, icon: '✨', description: 'XP doble por 1 día'),
-    Item(id: 'i9', name: 'Sombrero Elegante', type: ItemType.cosmetic, rarity: ItemRarity.uncommon, cost: 300, icon: '🎩', description: 'Puro estilo'),
-    Item(id: 'i10', name: 'Corona Real', type: ItemType.cosmetic, rarity: ItemRarity.legendary, cost: 2500, icon: '👑', description: 'Digna de un rey'),
+    Item(id: 'i1', name: 'Espada de Hierro', type: ItemType.weapon, rarity: ItemRarity.common, cost: 150, icon: '', description: '+5 de ataque'),
+    Item(id: 'i2', name: 'Escudo del Guardián', type: ItemType.armor, rarity: ItemRarity.uncommon, cost: 400, icon: '', description: '+8 de defensa'),
+    Item(id: 'i3', name: 'Armadura de Cuero', type: ItemType.armor, rarity: ItemRarity.uncommon, cost: 350, icon: '', description: '+10 de defensa'),
+    Item(id: 'i4', name: 'Casco de Guerrero', type: ItemType.armor, rarity: ItemRarity.uncommon, cost: 300, icon: '', description: '+5 de defensa'),
+    Item(id: 'i5', name: 'Botas de Aventurero', type: ItemType.cosmetic, rarity: ItemRarity.common, cost: 250, icon: '', description: 'Pura velocidad'),
+    Item(id: 'i6', name: 'Capa Azul', type: ItemType.cosmetic, rarity: ItemRarity.rare, cost: 500, icon: '', description: 'Estilo legendario'),
+    Item(id: 'i7', name: 'Poción de Vida', type: ItemType.potion, rarity: ItemRarity.common, cost: 80, icon: '', description: 'Restaura 50 HP'),
+    Item(id: 'i8', name: 'Elixir de XP', type: ItemType.potion, rarity: ItemRarity.rare, cost: 600, icon: '', description: 'XP doble por 1 día'),
   ];
 
   final List<InventoryItem> _inventory = [];

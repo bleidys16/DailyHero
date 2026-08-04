@@ -57,4 +57,43 @@ class ItemUi {
         return AppColors.legendary;
     }
   }
+
+  /// Ruta del sprite PNG del item según su nombre. Si no hay sprite
+  /// (pociones, etc.), devuelve null para usar un icono de respaldo.
+  static String? itemImage(Item item) {
+    final name = item.name.toLowerCase();
+    if (name.contains('espada')) return 'assets/sprites/iron_sword.png';
+    if (name.contains('escudo')) return 'assets/sprites/guardian_shield.png';
+    if (name.contains('armadura')) return 'assets/sprites/leather_armor.png';
+    if (name.contains('casco')) return 'assets/sprites/warrior_helmet.png';
+    if (name.contains('bota')) return 'assets/sprites/adventurer_boots.png';
+    if (name.contains('capa')) return 'assets/sprites/blue_cape.png';
+    return null;
+  }
+}
+
+/// Muestra el item con su sprite PNG si existe; si no, un icono Material
+/// del tipo correspondiente (sin emojis).
+class ItemIconThumb extends StatelessWidget {
+  final Item item;
+  final double size;
+  const ItemIconThumb({super.key, required this.item, this.size = 40});
+
+  @override
+  Widget build(BuildContext context) {
+    final img = ItemUi.itemImage(item);
+    if (img != null) {
+      return Image.asset(
+        img,
+        fit: BoxFit.contain,
+        width: size,
+        height: size,
+      );
+    }
+    return Icon(
+      ItemUi.typeIcon(item.type),
+      color: AppColors.primary,
+      size: size * 0.6,
+    );
+  }
 }

@@ -54,8 +54,13 @@ class _EquipBar extends StatelessWidget {
     'pants': 'Pantalón',
     'top': 'Top',
     'hair': 'Pelo',
+    'helmet': 'Casco',
     'headphones': 'Audífonos',
-    'weapon': 'Arma',
+    'cape': 'Capa',
+    'boots': 'Botas',
+    'armor': 'Armadura',
+    'shield': 'Escudo',
+    'weapon': 'Espada',
   };
 
   @override

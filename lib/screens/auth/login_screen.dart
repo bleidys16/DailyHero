@@ -45,12 +45,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       );
     }
-    // Si es correcto, el AuthGate reconstruye y muestra el Dashboard.
   }
 
   Future<void> _enterDemo() async {
     setState(() => _loading = true);
-    // Activa el servicio en memoria y carga el héroe de ejemplo.
     ref.read(demoModeProvider.notifier).state = true;
     await ref
         .read(userNotifierProvider.notifier)
@@ -62,126 +60,159 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Icon(Icons.shield_moon,
-                      size: 72, color: AppColors.primary),
-                  const SizedBox(height: 16),
-                  Text(
-                    'DailyHero',
-                    textAlign: TextAlign.center,
-                    style: AppTheme.pixel.copyWith(
-                      fontSize: 32,
-                      color: AppColors.textPrimary,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Convierte tus hábitos en aventura',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColors.textMuted),
-                  ),
-                  const SizedBox(height: 32),
-                  TextFormField(
-                    controller: _emailCtrl,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email_outlined),
-                    ),
-                    validator: (v) {
-                      final value = v?.trim() ?? '';
-                      if (value.isEmpty) return 'Ingresa tu email';
-                      if (!value.contains('@') || !value.contains('.')) {
-                        return 'Email no válido';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passCtrl,
-                    obscureText: _obscure,
-                    textInputAction: TextInputAction.done,
-                    onFieldSubmitted: (_) => _submit(),
-                    decoration: InputDecoration(
-                      labelText: 'Contraseña',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(_obscure
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined),
-                        onPressed: () => setState(() => _obscure = !_obscure),
-                      ),
-                    ),
-                    validator: (v) =>
-                        (v == null || v.isEmpty) ? 'Ingresa tu contraseña' : null,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: _loading ? null : _submit,
-                    child: _loading
-                        ? const SizedBox(
-                            height: 22,
-                            width: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text('Entrar'),
-                  ),
-                  const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: _loading
-                        ? null
-                        : () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const SignupScreen(),
-                              ),
-                            ),
-                    child: const Text(
-                      '¿No tienes cuenta? Regístrate',
-                      style: TextStyle(color: AppColors.accent),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Divider(color: AppColors.surfaceAlt),
-                  const SizedBox(height: 8),
-                  OutlinedButton.icon(
-                    onPressed: _loading ? null : _enterDemo,
-                    icon: const Icon(Icons.videogame_asset_outlined),
-                    label: const Text('Entrar en modo demo'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.accent,
-                      side: const BorderSide(color: AppColors.accent),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: Text(
-                      'Prueba la app sin cuenta (datos de ejemplo)',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: AppColors.textMuted, fontSize: 12),
-                    ),
-                  ),
-                ],
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            'assets/images/login.png',
+            fit: BoxFit.cover,
+          ),
+          // Degradado solo en la parte inferior: mantiene el logo del
+          // fondo totalmente visible y da contraste al formulario.
+          const IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.0, 0.4, 1.0],
+                  colors: [
+                    Colors.transparent,
+                    Colors.transparent,
+                    Color(0xF2000E1F),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(32, 16, 32, 24),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 420),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'BIENVENIDO NUEVAMENTE',
+                          textAlign: TextAlign.center,
+                          style: AppTheme.titleRpg.copyWith(
+                            fontSize: 26,
+                            color: AppColors.textPrimary,
+                            letterSpacing: 1.2,
+                            shadows: const [
+                              Shadow(
+                                color: Colors.black54,
+                                blurRadius: 8,
+                                offset: Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        TextFormField(
+                          controller: _emailCtrl,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          style: AppTheme.body.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: 15,
+                          ),
+                          decoration: const InputDecoration(
+                            hintText: 'Email',
+                            prefixIcon: Icon(Icons.mail_outline, size: 20),
+                          ),
+                          validator: (v) {
+                            final value = v?.trim() ?? '';
+                            if (value.isEmpty) return 'Ingresa tu email';
+                            if (!value.contains('@') || !value.contains('.')) {
+                              return 'Email no válido';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 14),
+                        TextFormField(
+                          controller: _passCtrl,
+                          obscureText: _obscure,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) => _submit(),
+                          style: AppTheme.body.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: 15,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Contraseña',
+                            prefixIcon: const Icon(Icons.lock_outline, size: 20),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscure
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                                size: 20,
+                              ),
+                              onPressed: () =>
+                                  setState(() => _obscure = !_obscure),
+                            ),
+                          ),
+                          validator: (v) => (v == null || v.isEmpty)
+                              ? 'Ingresa tu contraseña'
+                              : null,
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: _loading ? null : _submit,
+                          child: _loading
+                              ? const SizedBox(
+                                  height: 22,
+                                  width: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text('Entrar'),
+                        ),
+                        const SizedBox(height: 12),
+                        TextButton(
+                          onPressed: _loading
+                              ? null
+                              : () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const SignupScreen(),
+                                    ),
+                                  ),
+                          child: const Text('¿No tienes cuenta? Crea una'),
+                        ),
+                        const SizedBox(height: 24),
+                        const Divider(color: Colors.white12),
+                        const SizedBox(height: 16),
+                        OutlinedButton(
+                          onPressed: _loading ? null : _enterDemo,
+                          child: const Text('Probar modo demo'),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Entra sin cuenta con datos de ejemplo',
+                          textAlign: TextAlign.center,
+                          style: AppTheme.body.copyWith(
+                            color: AppColors.textMuted,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

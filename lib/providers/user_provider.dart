@@ -73,12 +73,19 @@ class UserNotifier extends StateNotifier<User?> {
 
   /// Logout
   Future<void> logout() async {
+    // Fuerza salir del modo demo para volver al flujo real.
+    ref.read(demoModeProvider.notifier).state = false;
+    ref.invalidate(supabaseServiceProvider);
+
+    final supabase = ref.read(supabaseServiceProvider);
+
+    // Cierra la sesión en la UI de inmediato para que el AuthGate
+    // regrese al login sin quedarse en el splash.
+    state = null;
+    ref.invalidate(currentUserProvider);
+
     try {
-      final supabase = ref.read(supabaseServiceProvider);
       await supabase.logout();
-      state = null;
-      // Limpia la sesión cacheada para que el AuthGate muestre el login.
-      ref.invalidate(currentUserProvider);
     } catch (e) {
       print('Error en logout: $e');
     }

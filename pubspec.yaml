@@ -21,7 +21,6 @@ dependencies:
 
   # UI & Animaciones
   smooth_page_indicator: ^1.1.0
-  google_fonts: ^6.1.0
   flutter_animate: ^4.2.0
 
   # Motor de juego (avatar pixel art)
@@ -49,6 +48,9 @@ flutter:
     - assets/icons/
 
   fonts:
-    - family: PixelFont
+    - family: Jersey10
       fonts:
-        - asset: assets/fonts/pixel_font.ttf
+        - asset: assets/fonts/jersey10.ttf
+    - family: SpaceGrotesk
+      fonts:
+        - asset: assets/fonts/space_grotesk.woff2

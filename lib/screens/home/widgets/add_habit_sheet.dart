@@ -14,7 +14,7 @@ class AddHabitSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -82,7 +82,7 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
           children: [
             Center(
               child: Text('Nuevo hábito',
-                  style: AppTheme.pixel.copyWith(
+                  style: AppTheme.titleRpg.copyWith(
                       fontSize: 18, color: AppColors.textPrimary)),
             ),
             const SizedBox(height: 20),
@@ -115,7 +115,12 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
                       color: selected ? Colors.white : HabitUi.categoryColor(c)),
                   selected: selected,
                   selectedColor: HabitUi.categoryColor(c),
-                  backgroundColor: AppColors.surface,
+                  backgroundColor: AppColors.surfaceAlt,
+                  side: BorderSide(
+                    color: selected
+                        ? HabitUi.categoryColor(c)
+                        : AppColors.borderLight,
+                  ),
                   onSelected: (_) => setState(() => _category = c),
                 );
               }).toList(),
@@ -130,7 +135,12 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
                   label: Text(HabitUi.difficultyLabel(d)),
                   selected: selected,
                   selectedColor: HabitUi.difficultyColor(d),
-                  backgroundColor: AppColors.surface,
+                  backgroundColor: AppColors.surfaceAlt,
+                  side: BorderSide(
+                    color: selected
+                        ? HabitUi.difficultyColor(d)
+                        : AppColors.borderLight,
+                  ),
                   onSelected: (_) => setState(() => _difficulty = d),
                 );
               }).toList(),
@@ -145,7 +155,12 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
                   label: Text(HabitUi.frequencyLabel(f)),
                   selected: selected,
                   selectedColor: AppColors.primary,
-                  backgroundColor: AppColors.surface,
+                  backgroundColor: AppColors.surfaceAlt,
+                  side: BorderSide(
+                    color: selected
+                        ? AppColors.primary
+                        : AppColors.borderLight,
+                  ),
                   onSelected: (_) => setState(() => _frequency = f),
                 );
               }).toList(),
@@ -168,6 +183,10 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: _saving ? null : _save,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
               child: _saving
                   ? const SizedBox(
                       height: 22,

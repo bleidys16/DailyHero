@@ -22,7 +22,12 @@ class LayeredAvatar extends PositionComponent {
     'pants',
     'top',
     'hair',
+    'helmet',
     'headphones',
+    'cape',
+    'boots',
+    'armor',
+    'shield',
     'weapon',
   ];
 

@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/theme.dart';
 import 'home/dashboard_screen.dart';
 import 'inventory/inventory_screen.dart';
 import 'shop/shop_screen.dart';
+import 'profile/profile_screen.dart';
 
-/// Contenedor principal con barra de navegación inferior.
-class MainShell extends ConsumerStatefulWidget {
+class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
   @override
-  ConsumerState<MainShell> createState() => _MainShellState();
+  State<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends ConsumerState<MainShell> {
+class _MainShellState extends State<MainShell> {
   int _index = 0;
 
   static const _pages = [
     DashboardScreen(),
     ShopScreen(),
     InventoryScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -31,22 +31,33 @@ class _MainShellState extends ConsumerState<MainShell> {
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
         backgroundColor: AppColors.surface,
-        indicatorColor: AppColors.primary,
-        destinations: const [
+        indicatorColor: AppColors.primary.withOpacity(0.15),
+        height: 70,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
+            icon: const Icon(Icons.home_outlined, color: AppColors.textMuted),
+            selectedIcon: const Icon(Icons.home, color: AppColors.primary),
             label: 'Inicio',
           ),
           NavigationDestination(
-            icon: Icon(Icons.storefront_outlined),
-            selectedIcon: Icon(Icons.storefront),
+            icon:
+                const Icon(Icons.storefront_outlined, color: AppColors.textMuted),
+            selectedIcon:
+                const Icon(Icons.storefront, color: AppColors.primary),
             label: 'Tienda',
           ),
           NavigationDestination(
-            icon: Icon(Icons.backpack_outlined),
-            selectedIcon: Icon(Icons.backpack),
+            icon:
+                const Icon(Icons.backpack_outlined, color: AppColors.textMuted),
+            selectedIcon: const Icon(Icons.backpack, color: AppColors.primary),
             label: 'Inventario',
+          ),
+          NavigationDestination(
+            icon:
+                const Icon(Icons.person_outline, color: AppColors.textMuted),
+            selectedIcon: const Icon(Icons.person, color: AppColors.primary),
+            label: 'Perfil',
           ),
         ],
       ),
